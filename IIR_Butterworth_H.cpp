@@ -871,6 +871,23 @@ void IIR_Butterworth::zp2ss(int order_filt)
 std::vector<std::vector<double> > IIR_Butterworth::lp2bp(double W_f1, double W_f2, int order_filt)
 {
 
+    //Clean up the global variables for a new analysis
+    if (save_filt_coeff.size() > 0)
+    {
+
+        save_filt_coeff.erase(save_filt_coeff.begin(), save_filt_coeff.begin() + save_filt_coeff.size());
+        ptemp.erase(ptemp.begin(), ptemp.begin() + ptemp.size());
+        p.erase(p.begin(), p.begin() + p.size());
+
+        a.erase(a.begin(), a.begin() + a.size());
+        b.erase(b.begin(), b.begin() + b.size());
+        c.erase(c.begin(), c.begin() + c.size());
+
+        num_filt.erase(num_filt.begin(), num_filt.begin() + num_filt.size());
+        den_filt.erase(den_filt.begin(), den_filt.begin() + den_filt.size());
+
+    }
+    
     for (int hh = 0; hh < 2; hh++)
     {
 
@@ -995,6 +1012,23 @@ std::vector<std::vector<double> > IIR_Butterworth::lp2bp(double W_f1, double W_f
 std::vector<std::vector<double> > IIR_Butterworth::lp2bs(double W_f1, double W_f2, int order_filt)
 {
 
+    //Clean up the global variables for a new analysis
+    if (save_filt_coeff.size() > 0)
+    {
+
+        save_filt_coeff.erase(save_filt_coeff.begin(), save_filt_coeff.begin() + save_filt_coeff.size());
+        ptemp.erase(ptemp.begin(), ptemp.begin() + ptemp.size());
+        p.erase(p.begin(), p.begin() + p.size());
+
+        a.erase(a.begin(), a.begin() + a.size());
+        b.erase(b.begin(), b.begin() + b.size());
+        c.erase(c.begin(), c.begin() + c.size());
+
+        num_filt.erase(num_filt.begin(), num_filt.begin() + num_filt.size());
+        den_filt.erase(den_filt.begin(), den_filt.begin() + den_filt.size());
+
+    }
+    
     for (int hh = 0; hh < 2; hh++)
     {
 
@@ -1141,6 +1175,24 @@ std::vector<std::vector<double> > IIR_Butterworth::lp2bs(double W_f1, double W_f
 //Extract the coefficients of the low pass filter
 std::vector<std::vector<double> > IIR_Butterworth::lp2lp(double W_f2, int order_filt)
 {
+    
+    //Clean up the global variables for a new analysis
+    if (save_filt_coeff.size() > 0)
+    {
+
+        save_filt_coeff.erase(save_filt_coeff.begin(), save_filt_coeff.begin() + save_filt_coeff.size());
+        ptemp.erase(ptemp.begin(), ptemp.begin() + ptemp.size());
+        p.erase(p.begin(), p.begin() + p.size());
+
+        a.erase(a.begin(), a.begin() + a.size());
+        b.erase(b.begin(), b.begin() + b.size());
+        c.erase(c.begin(), c.begin() + c.size());
+
+        num_filt.erase(num_filt.begin(), num_filt.begin() + num_filt.size());
+        den_filt.erase(den_filt.begin(), den_filt.begin() + den_filt.size());
+
+    }
+    
 
     for (int hh = 0; hh < 2; hh++)
     {
@@ -1227,6 +1279,23 @@ std::vector<std::vector<double> > IIR_Butterworth::lp2lp(double W_f2, int order_
 std::vector<std::vector<double> > IIR_Butterworth::lp2hp(double W_f1, int order_filt)
 {
 
+    //Clean up the global variables for a new analysis
+    if (save_filt_coeff.size() > 0)
+    {
+
+        save_filt_coeff.erase(save_filt_coeff.begin(), save_filt_coeff.begin() + save_filt_coeff.size());
+        ptemp.erase(ptemp.begin(), ptemp.begin() + ptemp.size());
+        p.erase(p.begin(), p.begin() + p.size());
+
+        a.erase(a.begin(), a.begin() + a.size());
+        b.erase(b.begin(), b.begin() + b.size());
+        c.erase(c.begin(), c.begin() + c.size());
+
+        num_filt.erase(num_filt.begin(), num_filt.begin() + num_filt.size());
+        den_filt.erase(den_filt.begin(), den_filt.begin() + den_filt.size());
+
+    }
+    
     for (int hh = 0; hh < 2; hh++)
     {
 
