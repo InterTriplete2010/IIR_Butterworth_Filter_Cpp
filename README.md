@@ -4,7 +4,7 @@ C++ code to calculate the coefficients of the Butterworth filter
 
 This code calculate the coefficients of the Band-pass, Band-stop, Low-pass and High-pass Butterworth filters. The file IIR_Butterworth.cpp can be used to test the code. 
 
-Each filter function will return a 2 rows x N coefficients 2D vector, where Row 1 = Numerator and Row 2 = Denumerator
+Each filter function will return a 2 rows x N coefficients 2D vector, where Row 1 = Numerator and Row 2 = Denumerator. Please, keep in mind that my code doesn't check whether the filter is stable or unstable. I might add this piece of code in the future, but for the time being the user is responsible for choosing a set of parameters that allows stability of the filter.
 
 1) Band-pass: the function is "std::vector<std::vector<double> > lp2bp(double, double, int)". The first two arguments are the two cut-off frequencies and the last argument is the order;
 
