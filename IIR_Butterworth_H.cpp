@@ -293,9 +293,6 @@ std::vector<std::vector<int> > IIR_Butterworth::combination_method(int N, int K,
     
     std::vector<std::vector<int> > matrix_comb_f;
 
-    for (int hh = 0; hh < comb_n; hh++)
-    {
-
         std::vector<int> temp_v;
 
         for (int ff = 0; ff < K; ff++)
@@ -305,6 +302,8 @@ std::vector<std::vector<int> > IIR_Butterworth::combination_method(int N, int K,
 
         }
 
+    for (int hh = 0; hh < comb_n; hh++)
+    {
         matrix_comb_f.push_back(temp_v);
 
     }
@@ -370,9 +369,6 @@ std::vector<std::complex<double>> IIR_Butterworth::char_poly(arma::cx_mat temp_m
             num_det = factorial(row_col) / (factorial(row_col - kk) * factorial(kk));  //Calculate the number of combinations   
             
             
-            for (int hh = 0; hh < num_det; hh++)
-            {
-
                 std::vector<int> temp_v;
 
                 for (int ff = 0; ff < num_det; ff++)
@@ -381,6 +377,9 @@ std::vector<std::complex<double>> IIR_Butterworth::char_poly(arma::cx_mat temp_m
                     temp_v.push_back(0);
                     
                 }
+
+             for (int hh = 0; hh < num_det; hh++)
+            {
 
                 matrix_comb.push_back(temp_v);
 
@@ -529,9 +528,6 @@ void IIR_Butterworth::zp2ss(int order_filt)
             order_filt_temp = order_filt;
             dim_matr = order_filt_temp / 2;
 
-            for (int kk = 0; kk < dim_matr; kk++)
-            {
-
                 std::vector<std::complex<double>> temp_v;
 
                 for (int ll = 0; ll < coeff_numb; ll++)
@@ -541,7 +537,11 @@ void IIR_Butterworth::zp2ss(int order_filt)
 
                 }
 
+             for (int kk = 0; kk < dim_matr; kk++)
+            {
+                 
                 temp_matrix_a.push_back(temp_v);
+            
             }
 
         }
@@ -551,9 +551,7 @@ void IIR_Butterworth::zp2ss(int order_filt)
 
             order_filt_temp = order_filt - 1;
             dim_matr = order_filt_temp / 2;
-            for (int kk = 0; kk < dim_matr; kk++)
-            {
-
+            
                 std::vector<std::complex<double>> temp_v;
 
                 for (int ll = 0; ll < coeff_numb; ll++)
@@ -562,6 +560,9 @@ void IIR_Butterworth::zp2ss(int order_filt)
                     temp_v.push_back(0);
 
                 }
+
+            for (int kk = 0; kk < dim_matr; kk++)
+            {
 
                 temp_matrix_a.push_back(temp_v);
             }
@@ -605,9 +606,7 @@ void IIR_Butterworth::zp2ss(int order_filt)
 
             //Update the state-space arrays/matrix
             track_cycles += 1;
-            for (int kk = 0; kk < temp_dim_arr_matr; kk++)
-            {
-
+           
                 std::vector<std::complex<double>> temp_v;
 
                 for (int ll = 0; ll < temp_dim_arr_matr; ll++)
@@ -616,6 +615,9 @@ void IIR_Butterworth::zp2ss(int order_filt)
                     temp_v.push_back(0);
 
                 }
+
+             for (int kk = 0; kk < temp_dim_arr_matr; kk++)
+            {
 
                 a.push_back(temp_v);
             }
@@ -888,8 +890,6 @@ std::vector<std::vector<double> > IIR_Butterworth::lp2bp(double W_f1, double W_f
 
     }
     
-    for (int hh = 0; hh < 2; hh++)
-    {
 
         std::vector<double> temp_v;
 
@@ -900,6 +900,8 @@ std::vector<std::vector<double> > IIR_Butterworth::lp2bp(double W_f1, double W_f
 
         }
 
+     for (int hh = 0; hh < 2; hh++)
+    {
         save_filt_coeff.push_back(temp_v);
         
     }
@@ -1029,9 +1031,6 @@ std::vector<std::vector<double> > IIR_Butterworth::lp2bs(double W_f1, double W_f
 
     }
     
-    for (int hh = 0; hh < 2; hh++)
-    {
-
         std::vector<double> temp_v;
 
         for (int ff = 0; ff < 2 * order_filt + 1; ff++)
@@ -1040,6 +1039,9 @@ std::vector<std::vector<double> > IIR_Butterworth::lp2bs(double W_f1, double W_f
             temp_v.push_back(0);
 
         }
+
+     for (int hh = 0; hh < 2; hh++)
+    {
 
         save_filt_coeff.push_back(temp_v);
 
@@ -1194,9 +1196,6 @@ std::vector<std::vector<double> > IIR_Butterworth::lp2lp(double W_f2, int order_
     }
     
 
-    for (int hh = 0; hh < 2; hh++)
-    {
-
         std::vector<double> temp_v;
 
         for (int ff = 0; ff < 2 * order_filt; ff++)
@@ -1205,6 +1204,9 @@ std::vector<std::vector<double> > IIR_Butterworth::lp2lp(double W_f2, int order_
             temp_v.push_back(0);
 
         }
+
+     for (int hh = 0; hh < 2; hh++)
+    {
 
         save_filt_coeff.push_back(temp_v);
 
@@ -1295,9 +1297,6 @@ std::vector<std::vector<double> > IIR_Butterworth::lp2hp(double W_f1, int order_
         den_filt.erase(den_filt.begin(), den_filt.begin() + den_filt.size());
 
     }
-    
-    for (int hh = 0; hh < 2; hh++)
-    {
 
         std::vector<double> temp_v;
 
@@ -1308,6 +1307,9 @@ std::vector<std::vector<double> > IIR_Butterworth::lp2hp(double W_f1, int order_
 
         }
 
+     for (int hh = 0; hh < 2; hh++)
+    {
+         
         save_filt_coeff.push_back(temp_v);
 
     }
