@@ -12,7 +12,8 @@
 #include <complex.h>
 #include "IIR_Butterworth.h"
 
-#define ARMA_DONT_USE_CXX11
+//#define ARMA_DONT_USE_CXX11
+#define ARMA_DONT_USE_CXX11_MUTEX
 #include <armadillo>
 
 #ifdef _DEBUG
