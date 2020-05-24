@@ -19,8 +19,6 @@ double fs = 2;
 double u_f1;
 double u_f2;
 double Wn;
-double Wn_f1;
-double Wn_f2;
 double Bw;
 
 std::vector<std::complex<double>> ptemp;
