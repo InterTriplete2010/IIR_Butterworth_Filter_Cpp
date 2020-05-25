@@ -4,7 +4,7 @@ C++ code to calculate the coefficients of the Butterworth filter
 
 This code calculate the coefficients of the Band-pass, Band-stop, Low-pass and High-pass Butterworth filters. The file IIR_Butterworth.cpp can be used to test the code. 
 
-Each filter function will return a 2 rows x N coefficients 2D vector, where Row 1 = Numerator and Row 2 = Denumerator. Please, keep in mind that my code doesn't check whether the filter is stable or unstable. I might add this piece of code in the future, but for the time being the user is responsible for choosing a set of parameters that allows stability of the filter.
+Each filter function will return a 2 rows x N coefficients 2D vector, where Row 1 = Numerator and Row 2 = Denumerator. 
 
 1) Band-pass: the function is "std::vector<std::vector<double> > lp2bp(double, double, int)". The first two arguments are the two cut-off frequencies and the last argument is the order;
 
@@ -13,6 +13,8 @@ Each filter function will return a 2 rows x N coefficients 2D vector, where Row 
 3) Low-pass: the function is "std::vector<std::vector<double> > lp2lp(double, int)". The first argument is the cut-off frequency and the last argument is the order;
 
 4) High-pass: the function is "std::vector<std::vector<double> > lp2hp(double, int)". The first argument is the cut-off frequency and the last argument is the order;
+  
+5) Check the stability of the filter: the function is bool "bool check_stability(std::vector<std::vector<double> > coeff_filt)". The argument is the 2D array containing the filter coefficients. It returns "true" if the filter is stable, "false" if it is unstable.
 
 This code has been written following the Matlab code, so the arguments of each function reflect the arguments that you should pass to the equivalent functions in Matlab. I tried to be consistent with the names of the functions, in case someone wants to compare this code with Matlab code. 
 
