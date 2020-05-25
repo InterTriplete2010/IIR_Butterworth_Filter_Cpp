@@ -1631,3 +1631,49 @@ void IIR_Butterworth::zero_pole_gain(arma::cx_mat a_arma_f, int type_filt_f, int
     
 }
 
+//Check the stability of the filter
+    bool IIR_Butterworth::check_stability(std::vector<std::vector<double> > coeff_filt)
+    {
+        bool stability_flag = true;
+
+        //Calculate the roots
+        arma::mat roots_den_matrix = arma::zeros(coeff_filt[1].size() - 1, coeff_filt[1].size() - 1);
+        for (int kk = 0; kk < coeff_filt[1].size() - 2; kk++)
+        {
+
+            roots_den_matrix(kk + 1, kk) = 1;
+
+        }
+
+         for (int kk = 0; kk < coeff_filt[1].size() - 1; kk++)
+        {
+
+            roots_den_matrix(0, kk) = -coeff_filt[1][kk + 1];
+
+        }
+        
+         
+        std::vector<double> magnitude_roots_den (coeff_filt[1].size() - 1);
+        arma::cx_vec roots_den;
+        arma::cx_mat eigvec;
+
+        arma::eig_gen(roots_den,eigvec, roots_den_matrix);
+        
+        for (int kk = 0; kk < coeff_filt[1].size() - 1; kk++)
+        {
+
+            magnitude_roots_den[kk] = abs(roots_den[kk]);
+
+            if (magnitude_roots_den[kk] >= 1)
+            {
+
+                stability_flag = false;
+                break;
+            }
+
+        }
+
+        return stability_flag;
+
+    }
+    
