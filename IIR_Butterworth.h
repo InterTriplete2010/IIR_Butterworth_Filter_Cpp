@@ -30,7 +30,7 @@ extern "C" {  // only need to export C interface if
             //convert to low-pass prototype estimate
             void Wn_f1_Wn_f2(int, double, double);
             
-            //Get N - th order Butterworth analog lowpass prototype
+            //Get N - th order Butterworth analog lowpass prototype. It returns the poles of the analog form located on the unit circle in the left-half plane so to have a stable causal system
             void buttap(int);
             
             //Calculate the coefficients of the polynomial (based on Matlab code)
@@ -69,6 +69,9 @@ extern "C" {  // only need to export C interface if
             //Estimate the coeffients of a high-pass filter and return a 2 rows x N coefficients matrix. Row 1 = Numerator; Row 2 = Denumerator
             std::vector<std::vector<double> > lp2hp(double, int);
 
+            //Check the stability of the filter. Returns "true" is the filter is stable, false if it is unstable 
+            bool check_stability(std::vector<std::vector<double> >);
+
         };
 
     }
@@ -79,4 +82,3 @@ extern "C" {  // only need to export C interface if
 
 }
 #endif
-
