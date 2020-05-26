@@ -8,11 +8,12 @@
 #include <algorithm>
 #include "IIR_Butterworth.h"
 
-#define ARMA_DONT_USE_CXX11
+//#define ARMA_DONT_USE_CXX11
+#define ARMA_DONT_USE_CXX11_MUTEX
 #include <armadillo>
 
 
-#define PI 3.14159265
+#define PI 3.14159265359
 
 //Global variables
 double fs = 2;
@@ -25,7 +26,6 @@ std::vector<std::complex<double>> ptemp;
 std::complex<double> complex_real(1.0, 0.0);
 std::complex<double> complex_imag(0.0, 1.0);
 std::vector<std::complex<double>> p;
-double k;
 
 int temp_dim_arr_matr;
 std::vector<std::vector<std::complex<double>> > a;
@@ -79,17 +79,17 @@ void IIR_Butterworth::freq_pre_wrapped(int type_filt, double Wnf_1, double Wnf_2
 
         break;
 
-        //Low-pass
+        //High-pass
     case 2:
 
-        u_f2 = 2 * fs * tan(PI * Wnf_2 / fs);
+        u_f1 = 2 * fs * tan(PI * Wnf_1 / fs);
 
         break;
 
-        //High-pass
+        //Low-pass
     case 3:
 
-        u_f1 = 2 * fs * tan(PI * Wnf_1 / fs);
+        u_f2 = 2 * fs * tan(PI * Wnf_2 / fs);
 
         break;
 
@@ -122,14 +122,14 @@ void IIR_Butterworth::Wn_f1_Wn_f2(int type_filt, double u_f1, double u_f2)
         //Low-pass
     case 2:
 
-        Wn = u_f2;
+        Wn = u_f1;
 
         break;
 
         //High-pass
     case 3:
 
-        Wn = u_f1;
+        Wn = u_f2;
 
         break;
 
@@ -233,8 +233,6 @@ void IIR_Butterworth::buttap(int order_filt)
         }
     }
 
-    k = 1;
-
 }
 
 
@@ -300,11 +298,12 @@ std::vector<std::vector<int> > IIR_Butterworth::combination_method(int N, int K,
 
         }
 
-    for (int hh = 0; hh < comb_n; hh++)
-    {
-        matrix_comb_f.push_back(temp_v);
+        for (int hh = 0; hh < comb_n; hh++)
+        {
 
-    }
+            matrix_comb_f.push_back(temp_v);
+
+        }
 
     std::string bitmask(K, 1); // K leading 1's
     bitmask.resize(N, 0); // N-K trailing 0's
@@ -321,6 +320,7 @@ std::vector<std::vector<int> > IIR_Butterworth::combination_method(int N, int K,
 
             {
                 
+               
                 matrix_comb_f[rows_f][col_f] = i;
                
                 col_f++;
@@ -344,7 +344,7 @@ std::vector<std::complex<double>> IIR_Butterworth::char_poly(arma::cx_mat temp_m
     
     std::vector<std::complex<double>> coeff_pol_ff(row_col + 1);
     arma::cx_mat temp_val = arma::zeros <arma::cx_mat>(1,1);
-    int num_det;
+    double num_det;
     arma::cx_mat temp_matr = arma::zeros <arma::cx_mat>(row_col, row_col);
     
     std::vector<std::vector<int> > matrix_comb;
@@ -363,69 +363,119 @@ std::vector<std::complex<double>> IIR_Butterworth::char_poly(arma::cx_mat temp_m
         else
         {
 
-            temp_val(0,0) = 0;
-            num_det = factorial(row_col) / (factorial(row_col - kk) * factorial(kk));  //Calculate the number of combinations   
-            
-            
-                std::vector<int> temp_v;
+            temp_val(0, 0) = 0;
 
-                for (int ff = 0; ff < num_det; ff++)
+
+            num_det = (double)factorial(row_col) / (double)(factorial(row_col - kk) * (double)factorial(kk));  //Calculate the number of combinations   
+
+
+        //Catching the situation where the denominator is zero. Assign the default value of 10^10 to the denominator
+            if (isnan(num_det))
+            {
+
+                for (int ff = 0; ff < row_col + 1; ff++)
                 {
 
-                    temp_v.push_back(0);
-                    
+                    coeff_pol_ff[ff] = pow(10, 10);
+
                 }
 
-             for (int hh = 0; hh < num_det; hh++)
+                break;
+
+            }
+
+            if (num_det < 1)    //Handling the situation where numerical overflow generates a negative or zero value for the num_det because of the instability of the filter
+            {
+
+                for (int ff = 0; ff < row_col + 1; ff++)
+                {
+
+                    coeff_pol_ff[ff] = pow(10, 10);
+
+                }
+
+                break;
+
+            }
+
+            std::vector<int> temp_v;
+
+            for (int ff = 0; ff < num_det; ff++)
+            {
+
+                temp_v.push_back(0);
+
+            }
+
+            for (int hh = 0; hh < num_det; hh++)
             {
 
                 matrix_comb.push_back(temp_v);
 
             }
-            
-            // Generate the combinations 
-            matrix_comb = combination_method(row_col, kk, num_det);
-            
-            for (int mm = 0; mm < num_det; mm++)
 
+            if (num_det - (int)num_det == 0)
             {
+                // Generate the combinations 
+                matrix_comb = combination_method(row_col, kk, (int)num_det);
 
-                temp_matr = temp_matr_poly;
+                for (int mm = 0; mm < num_det; mm++)
 
-                for (int pp = 0; pp < row_col; pp++)
                 {
 
-                    temp_matr(matrix_comb[mm][0], pp) = 0;
-                    temp_matr(pp, matrix_comb[mm][0]) = 0;
-                    temp_matr(matrix_comb[mm][0], matrix_comb[mm][0]) = -1;
-
-                }
-                
-                for (int nn = 1; nn < kk; nn++)
-                {
+                    temp_matr = temp_matr_poly;
 
                     for (int pp = 0; pp < row_col; pp++)
                     {
 
-                        temp_matr(matrix_comb[mm][nn], pp) = 0;
-                        temp_matr(pp, matrix_comb[mm][nn]) = 0;
-                        temp_matr(matrix_comb[mm][nn], matrix_comb[mm][nn]) = -1;
+                        temp_matr(matrix_comb[mm][0], pp) = 0;
+                        temp_matr(pp, matrix_comb[mm][0]) = 0;
+                        temp_matr(matrix_comb[mm][0], matrix_comb[mm][0]) = -1;
 
                     }
 
+                    for (int nn = 1; nn < kk; nn++)
+                    {
+
+                        for (int pp = 0; pp < row_col; pp++)
+                        {
+
+                            temp_matr(matrix_comb[mm][nn], pp) = 0;
+                            temp_matr(pp, matrix_comb[mm][nn]) = 0;
+                            temp_matr(matrix_comb[mm][nn], matrix_comb[mm][nn]) = -1;
+
+                        }
+
+                    }
+
+                    temp_val(0, 0) += det(temp_matr);
+
                 }
 
-                temp_val(0,0) += det(temp_matr);
-            
+                coeff_pol_ff[row_col - kk] = pow(-1, row_col) * temp_val(0, 0);
+
+
             }
 
-            coeff_pol_ff[row_col - kk] = pow(-1, row_col)*temp_val(0, 0);
+            else
+            {
 
-            
+                for (int ff = 0; ff < row_col + 1; ff++)
+                {
+
+                    coeff_pol_ff[ff] = pow(10, 10);
+
+                }
+
+                break;
+
+            }
+
         }
 
     }
 
+    
     return coeff_pol_ff;
     
 }
@@ -535,12 +585,12 @@ void IIR_Butterworth::zp2ss(int order_filt)
 
                 }
 
-             for (int kk = 0; kk < dim_matr; kk++)
-            {
-                 
-                temp_matrix_a.push_back(temp_v);
-            
-            }
+                for (int kk = 0; kk < dim_matr; kk++)
+                {
+
+                    temp_matrix_a.push_back(temp_v);
+                
+                }
 
         }
 
@@ -549,7 +599,7 @@ void IIR_Butterworth::zp2ss(int order_filt)
 
             order_filt_temp = order_filt - 1;
             dim_matr = order_filt_temp / 2;
-            
+
                 std::vector<std::complex<double>> temp_v;
 
                 for (int ll = 0; ll < coeff_numb; ll++)
@@ -559,11 +609,12 @@ void IIR_Butterworth::zp2ss(int order_filt)
 
                 }
 
-            for (int kk = 0; kk < dim_matr; kk++)
-            {
+                for (int kk = 0; kk < dim_matr; kk++)
+                {
 
-                temp_matrix_a.push_back(temp_v);
-            }
+                    temp_matrix_a.push_back(temp_v);
+            
+                }
 
         }
 
@@ -604,7 +655,7 @@ void IIR_Butterworth::zp2ss(int order_filt)
 
             //Update the state-space arrays/matrix
             track_cycles += 1;
-           
+
                 std::vector<std::complex<double>> temp_v;
 
                 for (int ll = 0; ll < temp_dim_arr_matr; ll++)
@@ -614,11 +665,12 @@ void IIR_Butterworth::zp2ss(int order_filt)
 
                 }
 
-             for (int kk = 0; kk < temp_dim_arr_matr; kk++)
-            {
+                for (int kk = 0; kk < temp_dim_arr_matr; kk++)
+                {
 
-                a.push_back(temp_v);
-            }
+                    a.push_back(temp_v);
+            
+                }
 
             int track_index_coeff = 0;
 
@@ -852,7 +904,7 @@ void IIR_Butterworth::zp2ss(int order_filt)
 
 
         std::vector<std::complex<double>> temp_v;
-            temp_v.push_back(0);
+        temp_v.push_back(0);
         a.push_back(temp_v);
         a[0][0] = p[0];
 
@@ -887,7 +939,6 @@ std::vector<std::vector<double> > IIR_Butterworth::lp2bp(double W_f1, double W_f
         den_filt.erase(den_filt.begin(), den_filt.begin() + den_filt.size());
 
     }
-    
 
         std::vector<double> temp_v;
 
@@ -898,11 +949,12 @@ std::vector<std::vector<double> > IIR_Butterworth::lp2bp(double W_f1, double W_f
 
         }
 
-     for (int hh = 0; hh < 2; hh++)
-    {
-        save_filt_coeff.push_back(temp_v);
+        for (int hh = 0; hh < 2; hh++)
+        {
+
+            save_filt_coeff.push_back(temp_v);
         
-    }
+        }
 
     int type_filt = 0;
 
@@ -1028,7 +1080,8 @@ std::vector<std::vector<double> > IIR_Butterworth::lp2bs(double W_f1, double W_f
         den_filt.erase(den_filt.begin(), den_filt.begin() + den_filt.size());
 
     }
-    
+
+
         std::vector<double> temp_v;
 
         for (int ff = 0; ff < 2 * order_filt + 1; ff++)
@@ -1038,12 +1091,12 @@ std::vector<std::vector<double> > IIR_Butterworth::lp2bs(double W_f1, double W_f
 
         }
 
-     for (int hh = 0; hh < 2; hh++)
-    {
+        for (int hh = 0; hh < 2; hh++)
+        {
 
-        save_filt_coeff.push_back(temp_v);
+            save_filt_coeff.push_back(temp_v);
 
-    }
+        }
 
     int type_filt = 1;
 
@@ -1107,7 +1160,33 @@ std::vector<std::vector<double> > IIR_Butterworth::lp2bs(double W_f1, double W_f
 
     double q = Wn / Bw;
 
-    a_arma_pinv = (Wn / q) * arma::pinv(a_arma_pinv);
+    try
+    {
+
+        a_arma_pinv = (Wn / q) * arma::pinv(a_arma_pinv);
+
+    }
+
+    catch (std::runtime_error)
+    {
+
+        for (int kk = 0; kk < 2; kk++)
+        {
+
+            for (int hh = 0; hh < 2 * order_filt + 1; hh++)
+            {
+
+                save_filt_coeff[kk][hh] = pow(10, 10);
+
+            }
+        
+
+        }
+        
+        return save_filt_coeff;
+
+    }
+
 
     a_b_arma_temp = (Wn) * (a_arma_pinv * b_arma_temp) / q;
     c_a_arma_temp = c_arma_temp * a_arma_pinv;
@@ -1170,12 +1249,10 @@ std::vector<std::vector<double> > IIR_Butterworth::lp2bs(double W_f1, double W_f
 
 }
 
-
-
-//Extract the coefficients of the low pass filter
-std::vector<std::vector<double> > IIR_Butterworth::lp2lp(double W_f2, int order_filt)
+//Extract the coefficients of the high pass filter
+std::vector<std::vector<double> > IIR_Butterworth::lp2hp(double W_f2, int order_filt)
 {
-    
+
     //Clean up the global variables for a new analysis
     if (save_filt_coeff.size() > 0)
     {
@@ -1192,7 +1269,135 @@ std::vector<std::vector<double> > IIR_Butterworth::lp2lp(double W_f2, int order_
         den_filt.erase(den_filt.begin(), den_filt.begin() + den_filt.size());
 
     }
-    
+
+    std::vector<double> temp_v;
+
+    for (int ff = 0; ff < 2 * order_filt; ff++)
+    {
+
+        temp_v.push_back(0);
+
+    }
+
+    for (int hh = 0; hh < 2; hh++)
+    {
+
+        save_filt_coeff.push_back(temp_v);
+
+    }
+
+    int type_filt = 2;
+
+    //Step 1: get analog, pre - warped frequencies
+    freq_pre_wrapped(type_filt, W_f2, 0);
+
+    //Step 2: convert to low-pass prototype estimate
+    Wn_f1_Wn_f2(type_filt, u_f1, u_f2);
+
+    //Step 3: Get N - th order Butterworth analog lowpass prototype
+    buttap(order_filt);
+
+    //Step 4: Transform to state-space
+    zp2ss(order_filt);
+
+    if (order_filt > 1)
+    {
+
+        temp_dim_arr_matr -= 2;
+
+    }
+
+    else
+    {
+
+        temp_dim_arr_matr = order_filt;
+
+    }
+
+    //Copy the values of the matrix/arrays "arma" matrix/array in order to compute the pseudo-inverse of the matrix and other matrix operations
+    a_arma = arma::zeros <arma::cx_mat>(temp_dim_arr_matr, temp_dim_arr_matr);
+    b_arma = arma::zeros <arma::cx_mat>(temp_dim_arr_matr, 1);
+    c_arma = arma::zeros <arma::cx_mat>(1, temp_dim_arr_matr);
+    d_arma = arma::zeros <arma::cx_mat>(1, 1);
+
+    for (int kk = 0; kk < temp_dim_arr_matr; kk++)
+    {
+        b_arma(kk, 0) = b[kk];
+        c_arma(0, kk) = c[kk];
+
+        for (int ll = 0; ll < temp_dim_arr_matr; ll++)
+        {
+
+            a_arma(kk, ll) = a[kk][ll];
+
+        }
+
+    }
+
+    try
+    {
+
+        d_arma = d_arma - (c_arma * arma::pinv(a_arma)) * b_arma;
+
+    }
+
+    catch (std::runtime_error)
+    {
+
+        for (int kk = 0; kk < 2; kk++)
+        {
+
+            for (int hh = 0; hh < order_filt + 1; hh++)
+            {
+
+                save_filt_coeff[kk][hh] = pow(10, 10);
+
+            }
+
+
+        }
+
+        return save_filt_coeff;
+
+    }
+
+    c_arma = c_arma * arma::pinv(a_arma);
+    b_arma = -Wn * arma::pinv(a_arma) * b_arma;
+    a_arma = Wn * arma::pinv(a_arma);
+
+
+    //Step 5: Use Bilinear transformation to find discrete equivalent
+    bilinear(a_arma, b_arma, c_arma, d_arma, fs, type_filt);
+
+    //Step 6: Transform to zero-pole-gain and polynomial forms
+    zero_pole_gain(ad_arma, type_filt, order_filt, Wn, Bw);
+
+    return save_filt_coeff;
+
+}
+
+
+//Extract the coefficients of the low pass filter
+std::vector<std::vector<double> > IIR_Butterworth::lp2lp(double W_f1, int order_filt)
+{
+
+    //Clean up the global variables for a new analysis
+    if (save_filt_coeff.size() > 0)
+    {
+
+        save_filt_coeff.erase(save_filt_coeff.begin(), save_filt_coeff.begin() + save_filt_coeff.size());
+        ptemp.erase(ptemp.begin(), ptemp.begin() + ptemp.size());
+        p.erase(p.begin(), p.begin() + p.size());
+
+        a.erase(a.begin(), a.begin() + a.size());
+        b.erase(b.begin(), b.begin() + b.size());
+        c.erase(c.begin(), c.begin() + c.size());
+
+        num_filt.erase(num_filt.begin(), num_filt.begin() + num_filt.size());
+        den_filt.erase(den_filt.begin(), den_filt.begin() + den_filt.size());
+
+    }
+
 
         std::vector<double> temp_v;
 
@@ -1203,17 +1408,17 @@ std::vector<std::vector<double> > IIR_Butterworth::lp2lp(double W_f2, int order_
 
         }
 
-     for (int hh = 0; hh < 2; hh++)
-    {
+        for (int hh = 0; hh < 2; hh++)
+        {
 
-        save_filt_coeff.push_back(temp_v);
+            save_filt_coeff.push_back(temp_v);
 
-    }
+        }
 
-    int type_filt = 2;
+    int type_filt = 3;
 
     //Step 1: get analog, pre - warped frequencies
-    freq_pre_wrapped(type_filt, 0, W_f2);
+    freq_pre_wrapped(type_filt, 0, W_f1);
 
     //Step 2: convert to low-pass prototype estimate
     Wn_f1_Wn_f2(type_filt, u_f1, u_f2);
@@ -1275,107 +1480,6 @@ std::vector<std::vector<double> > IIR_Butterworth::lp2lp(double W_f2, int order_
 }
 
 
-//Extract the coefficients of the high pass filter
-std::vector<std::vector<double> > IIR_Butterworth::lp2hp(double W_f1, int order_filt)
-{
-
-    //Clean up the global variables for a new analysis
-    if (save_filt_coeff.size() > 0)
-    {
-
-        save_filt_coeff.erase(save_filt_coeff.begin(), save_filt_coeff.begin() + save_filt_coeff.size());
-        ptemp.erase(ptemp.begin(), ptemp.begin() + ptemp.size());
-        p.erase(p.begin(), p.begin() + p.size());
-
-        a.erase(a.begin(), a.begin() + a.size());
-        b.erase(b.begin(), b.begin() + b.size());
-        c.erase(c.begin(), c.begin() + c.size());
-
-        num_filt.erase(num_filt.begin(), num_filt.begin() + num_filt.size());
-        den_filt.erase(den_filt.begin(), den_filt.begin() + den_filt.size());
-
-    }
-
-        std::vector<double> temp_v;
-
-        for (int ff = 0; ff < 2 * order_filt; ff++)
-        {
-
-            temp_v.push_back(0);
-
-        }
-
-     for (int hh = 0; hh < 2; hh++)
-    {
-         
-        save_filt_coeff.push_back(temp_v);
-
-    }
-
-    int type_filt = 3;
-
-    //Step 1: get analog, pre - warped frequencies
-    freq_pre_wrapped(type_filt, W_f1, 0);
-
-    //Step 2: convert to low-pass prototype estimate
-    Wn_f1_Wn_f2(type_filt, u_f1, u_f2);
-
-    //Step 3: Get N - th order Butterworth analog lowpass prototype
-    buttap(order_filt);
-
-    //Step 4: Transform to state-space
-    zp2ss(order_filt);
-
-    if (order_filt > 1)
-    {
-
-        temp_dim_arr_matr -= 2;
-
-    }
-
-    else
-    {
-
-        temp_dim_arr_matr = order_filt;
-
-    }
-
-    //Copy the values of the matrix/arrays "arma" matrix/array in order to compute the pseudo-inverse of the matrix and other matrix operations
-    a_arma = arma::zeros <arma::cx_mat>(temp_dim_arr_matr, temp_dim_arr_matr);
-    b_arma = arma::zeros <arma::cx_mat>(temp_dim_arr_matr, 1);
-    c_arma = arma::zeros <arma::cx_mat>(1, temp_dim_arr_matr);
-    d_arma = arma::zeros <arma::cx_mat>(1, 1);
-
-    for (int kk = 0; kk < temp_dim_arr_matr; kk++)
-    {
-        b_arma(kk, 0) = b[kk];
-        c_arma(0, kk) = c[kk];
-
-        for (int ll = 0; ll < temp_dim_arr_matr; ll++)
-        {
-
-            a_arma(kk, ll) = a[kk][ll];
-
-        }
-
-    }
-
-    d_arma = d_arma - (c_arma * arma::pinv(a_arma)) * b_arma;
-    c_arma = c_arma * arma::pinv(a_arma);
-    b_arma = -Wn * arma::pinv(a_arma) * b_arma;
-    a_arma = Wn * arma::pinv(a_arma);
-
-
-    //Step 5: Use Bilinear transformation to find discrete equivalent
-    bilinear(a_arma, b_arma, c_arma, d_arma, fs, type_filt);
-
-    //Step 6: Transform to zero-pole-gain and polynomial forms
-    zero_pole_gain(ad_arma, type_filt, order_filt, Wn, Bw);
-
-    return save_filt_coeff;
-
-}
-
 
 
 //Step 5: Use Bilinear transformation to find discrete equivalent
@@ -1407,15 +1511,24 @@ void IIR_Butterworth::bilinear(arma::cx_mat a_arma_f, arma::cx_mat b_arma_f, arm
 
     }
 
-    t_arma = (1 / fs_f);
-    r_arma = sqrt(t_arma);
-    t1_arma = t1_arma.eye() + a_arma_f * t_arma * 0.5; //t1_arma.eye() 
-    t2_arma = t2_arma.eye() - a_arma_f * t_arma * 0.5;
-    ad_arma = t1_arma * arma::pinv(t2_arma);
-    bd_arma = (t_arma / r_arma) * arma::solve(t2_arma, b_arma_f);
-    cd_arma = (r_arma * c_arma_f) * arma::pinv(t2_arma);
-    dd_arma = (c_arma_f * arma::pinv(t2_arma)) * b_arma_f * (t_arma / 2) + d_arma_f;
+    try
+    {
+        t_arma = (1 / fs_f);
+        r_arma = sqrt(t_arma);
+        t1_arma = t1_arma.eye() + a_arma_f * t_arma * 0.5; //t1_arma.eye() 
+        t2_arma = t2_arma.eye() - a_arma_f * t_arma * 0.5;
+        ad_arma = t1_arma * arma::pinv(t2_arma);
+        bd_arma = (t_arma / r_arma) * arma::solve(t2_arma, b_arma_f);
+        cd_arma = (r_arma * c_arma_f) * arma::pinv(t2_arma);
+        dd_arma = (c_arma_f * arma::pinv(t2_arma)) * b_arma_f * (t_arma / 2) + d_arma_f;
+    }
 
+    catch (std::runtime_error)
+    {
+
+
+
+    }
 }
 
 
@@ -1437,8 +1550,8 @@ void IIR_Butterworth::zero_pole_gain(arma::cx_mat a_arma_f, int type_filt_f, int
             den_filt.push_back(0);
 
         }
-        
-        
+
+
         dim_array = temp_dim_arr_matr;
 
     }
@@ -1447,14 +1560,14 @@ void IIR_Butterworth::zero_pole_gain(arma::cx_mat a_arma_f, int type_filt_f, int
     {
 
         //Initialize the vectors "num_filt" and "den_filt"
-        for (int i = 0; i < 2*order_filt_f + 1; i++)
+        for (int i = 0; i < 2 * order_filt_f + 1; i++)
         {
 
             num_filt.push_back(0);
             den_filt.push_back(0);
 
         }
-        
+
 
         dim_array = 2 * temp_dim_arr_matr;
 
@@ -1462,19 +1575,19 @@ void IIR_Butterworth::zero_pole_gain(arma::cx_mat a_arma_f, int type_filt_f, int
 
     //Extract the coefficients of the denumerator
     std::vector<std::complex<double>> coeff_pol(temp_dim_arr_matr + 1);
-    
+
     if (type_filt_f > 1)
 
     {
-        
+
         coeff_pol = char_poly(a_arma_f, temp_dim_arr_matr);
-        
+
     }
 
     else
     {
 
-        coeff_pol = char_poly(a_arma_f, 2*temp_dim_arr_matr);
+        coeff_pol = char_poly(a_arma_f, 2 * temp_dim_arr_matr);
 
     }
 
@@ -1487,7 +1600,7 @@ void IIR_Butterworth::zero_pole_gain(arma::cx_mat a_arma_f, int type_filt_f, int
 
     }
 
-   
+
     //Extract the coefficients of the denominator
     double w;
     Wn = 2 * std::atan2(Wn, 4);
@@ -1504,7 +1617,7 @@ void IIR_Butterworth::zero_pole_gain(arma::cx_mat a_arma_f, int type_filt_f, int
             r.push_back(0);
 
         }
-            
+
         for (int kk = 0; kk < dim_array; kk++)
         {
 
@@ -1548,25 +1661,7 @@ void IIR_Butterworth::zero_pole_gain(arma::cx_mat a_arma_f, int type_filt_f, int
 
         break;
 
-    case 2: // low-pass
-
-        for (int i = 0; i <= dim_array; i++)
-        {
-
-            r.push_back(0);
-
-        }
-
-        for (int kk = 0; kk < dim_array; kk++)
-        {
-
-            r[kk] = -1;
-
-        }
-        w = 0;
-        break;
-
-    case 3: //high-pass
+    case 2: //high-pass
 
         for (int i = 0; i <= dim_array; i++)
         {
@@ -1585,6 +1680,24 @@ void IIR_Butterworth::zero_pole_gain(arma::cx_mat a_arma_f, int type_filt_f, int
         w = PI;
         break;
 
+    case 3: // low-pass
+
+        for (int i = 0; i <= dim_array; i++)
+        {
+
+            r.push_back(0);
+
+        }
+
+        for (int kk = 0; kk < dim_array; kk++)
+        {
+
+            r[kk] = -1;
+
+        }
+        w = 0;
+        break;
+
     default:
         for (int i = 0; i <= dim_array; i++)
         {
@@ -1600,7 +1713,7 @@ void IIR_Butterworth::zero_pole_gain(arma::cx_mat a_arma_f, int type_filt_f, int
     coeff_pol_num = poly(r, dim_array);
 
     std::vector<std::complex<double>> kern(dim_array + 1);
-    
+
     for (int kk = 0; kk < dim_array + 1; kk++)
     {
 
@@ -1628,10 +1741,8 @@ void IIR_Butterworth::zero_pole_gain(arma::cx_mat a_arma_f, int type_filt_f, int
 
     }
 
-    
 }
-
-//Check the stability of the filter
+    //Check the stability of the filter
     bool IIR_Butterworth::check_stability(std::vector<std::vector<double> > coeff_filt)
     {
         bool stability_flag = true;
@@ -1677,3 +1788,4 @@ void IIR_Butterworth::zero_pole_gain(arma::cx_mat a_arma_f, int type_filt_f, int
 
     }
     
+
