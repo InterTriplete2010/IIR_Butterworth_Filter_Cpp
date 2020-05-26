@@ -12,8 +12,7 @@
 #include <complex.h>
 #include "IIR_Butterworth.h"
 
-//#define ARMA_DONT_USE_CXX11
-#define ARMA_DONT_USE_CXX11_MUTEX
+#define ARMA_DONT_USE_CXX11
 #include <armadillo>
 
 #ifdef _DEBUG
@@ -31,14 +30,15 @@ int main()
     double f1 = 1;  //High Pass
     double f2 = 30; //Low Pass
     double sf = 2048;    //Sampling frequency
-    int order_filt = 1; //Order
+    int order_filt = 2; //Order
     double Nyquist_F = sf / 2;
     
     std::vector<std::vector<double> > coeff_final(2);
 
-    int type_filt = 0;
+    int type_filt = 3;
     IIR_B_F::IIR_Butterworth ir_b;
-    int yy = 0;
+    
+    bool check_stability_flag;
 
     //_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
     //_CrtSetBreakAlloc(154);
@@ -65,8 +65,22 @@ int main()
 
         coeff_final = ir_b.lp2bp(f1 / Nyquist_F, f2 / Nyquist_F, order_filt);
         
-        yy = 0;
-        
+       check_stability_flag =  ir_b.check_stability(coeff_final);
+
+       if (check_stability_flag)
+       {
+
+           std::cout << "The filter is stable" << std::endl;
+
+       }
+
+       else
+       {
+
+           std::cout << "The filter is unstable" << std::endl;
+
+       }
+
         for (int kk = 0; kk < 2; kk++)
         {
             if (kk == 0)
@@ -110,7 +124,23 @@ int main()
 
         _CrtDumpMemoryLeaks();
         coeff_final = ir_b.lp2bs(f1 / Nyquist_F, f2 / Nyquist_F, order_filt);
-        yy = 0;
+       
+
+        check_stability_flag = ir_b.check_stability(coeff_final);
+
+        if (check_stability_flag)
+        {
+
+            std::cout << "The filter is stable" << std::endl;
+
+        }
+
+        else
+        {
+
+            std::cout << "The filter is unstable" << std::endl;
+
+        }
 
         for (int kk = 0; kk < 2; kk++)
         {
@@ -155,8 +185,23 @@ int main()
         }
 
         _CrtDumpMemoryLeaks();
-        coeff_final = ir_b.lp2lp(f2 / Nyquist_F, order_filt);
-        yy = 0;
+        coeff_final = ir_b.lp2hp(f1 / Nyquist_F, order_filt);
+        
+        check_stability_flag = ir_b.check_stability(coeff_final);
+
+        if (check_stability_flag)
+        {
+
+            std::cout << "The filter is stable" << std::endl;
+
+        }
+
+        else
+        {
+
+            std::cout << "The filter is unstable" << std::endl;
+
+        }
 
         for (int kk = 0; kk < 2; kk++)
         {
@@ -184,13 +229,11 @@ int main()
             }
 
             std::cout << std::endl;
-
         }
 
         break;
-        
-    case 3:
 
+    case 3:
         coeff_numb = order_filt + 1;
 
         for (int i = 0; i < 2; i++)
@@ -201,8 +244,23 @@ int main()
         }
 
         _CrtDumpMemoryLeaks();
-        coeff_final = ir_b.lp2hp(f1 / Nyquist_F, order_filt);
-        yy = 0;
+        coeff_final = ir_b.lp2lp(f2 / Nyquist_F, order_filt);
+
+        check_stability_flag = ir_b.check_stability(coeff_final);
+
+        if (check_stability_flag)
+        {
+
+            std::cout << "The filter is stable" << std::endl;
+
+        }
+
+        else
+        {
+
+            std::cout << "The filter is unstable" << std::endl;
+
+        }
 
         for (int kk = 0; kk < 2; kk++)
         {
@@ -234,7 +292,8 @@ int main()
         }
 
         break;
-        
+
+
     }
     
 }
