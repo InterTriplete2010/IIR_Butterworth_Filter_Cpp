@@ -4,7 +4,7 @@ C++ code to calculate the coefficients of the Butterworth filter
 
 This code calculate the coefficients of the Band-pass, Band-stop, Low-pass and High-pass Butterworth filters. The file IIR_Butterworth.cpp can be used to test the code. 
 
-Each filter function will return a 2 rows x N coefficients 2D vector, where Row 1 = Numerator and Row 2 = Denumerator. 
+Each filter function will return a 2 rows x N coefficients 2D vector, where Row 1 = Numerator and Row 2 = Denumerator. The method "check_stability_iir" can be used to check the stability of the filter. Please, keep in mind that if the filter is unstable, numerical instability leading to numerical overflow might happen. If that situation occurs, the program might assign a default value of 10^10 at the denominator and depending on the type of exception even at the numerator.
 
 1) Band-pass: the function is "std::vector<std::vector<double> > lp2bp(double, double, int)". The first two arguments are the two cut-off frequencies and the last argument is the order;
 
@@ -14,7 +14,7 @@ Each filter function will return a 2 rows x N coefficients 2D vector, where Row 
 
 4) High-pass: the function is "std::vector<std::vector<double> > lp2hp(double, int)". The first argument is the cut-off frequency and the last argument is the order;
   
-5) Check the stability of the filter: the function is bool "bool check_stability(std::vector<std::vector<double> > coeff_filt)". The argument is the 2D array containing the filter coefficients. It returns "true" if the filter is stable, "false" if it is unstable.
+5) Check the stability of the filter: the function is bool "bool check_stability_iir(std::vector<std::vector<double> > coeff_filt)". The argument is the 2D array containing the filter coefficients. It returns "true" if the filter is stable, "false" if it is unstable.
 
 This code has been written following the Matlab code, so the arguments of each function reflect the arguments that you should pass to the equivalent functions in Matlab. I tried to be consistent with the names of the functions, in case someone wants to compare this code with Matlab code. 
 
