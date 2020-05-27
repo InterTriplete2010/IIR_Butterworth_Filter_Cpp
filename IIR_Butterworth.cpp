@@ -27,15 +27,15 @@ int main()
 {
     
 
-    double f1 = 1;  //High Pass
-    double f2 = 30; //Low Pass
+    double f1 = 100;  //High Pass
+    double f2 = 300; //Low Pass
     double sf = 2048;    //Sampling frequency
     int order_filt = 2; //Order
     double Nyquist_F = sf / 2;
     
     std::vector<std::vector<double> > coeff_final(2);
 
-    int type_filt = 3;
+    int type_filt = 0;
     IIR_B_F::IIR_Butterworth ir_b;
     
     bool check_stability_flag;
@@ -65,7 +65,7 @@ int main()
 
         coeff_final = ir_b.lp2bp(f1 / Nyquist_F, f2 / Nyquist_F, order_filt);
         
-       check_stability_flag =  ir_b.check_stability(coeff_final);
+       check_stability_flag =  ir_b.check_stability_iir(coeff_final);
 
        if (check_stability_flag)
        {
@@ -126,7 +126,7 @@ int main()
         coeff_final = ir_b.lp2bs(f1 / Nyquist_F, f2 / Nyquist_F, order_filt);
        
 
-        check_stability_flag = ir_b.check_stability(coeff_final);
+        check_stability_flag = ir_b.check_stability_iir(coeff_final);
 
         if (check_stability_flag)
         {
@@ -187,7 +187,7 @@ int main()
         _CrtDumpMemoryLeaks();
         coeff_final = ir_b.lp2hp(f1 / Nyquist_F, order_filt);
         
-        check_stability_flag = ir_b.check_stability(coeff_final);
+        check_stability_flag = ir_b.check_stability_iir(coeff_final);
 
         if (check_stability_flag)
         {
@@ -246,7 +246,7 @@ int main()
         _CrtDumpMemoryLeaks();
         coeff_final = ir_b.lp2lp(f2 / Nyquist_F, order_filt);
 
-        check_stability_flag = ir_b.check_stability(coeff_final);
+        check_stability_flag = ir_b.check_stability_iir(coeff_final);
 
         if (check_stability_flag)
         {
