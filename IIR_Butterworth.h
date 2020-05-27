@@ -70,7 +70,7 @@ extern "C" {  // only need to export C interface if
             std::vector<std::vector<double> > lp2hp(double, int);
 
             //Check the stability of the filter. Returns "true" is the filter is stable, false if it is unstable 
-            bool check_stability(std::vector<std::vector<double> >);
+            bool check_stability_iir(std::vector<std::vector<double> >);
 
         };
 
