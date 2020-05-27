@@ -1743,7 +1743,7 @@ void IIR_Butterworth::zero_pole_gain(arma::cx_mat a_arma_f, int type_filt_f, int
 
 }
     //Check the stability of the filter
-    bool IIR_Butterworth::check_stability(std::vector<std::vector<double> > coeff_filt)
+    bool IIR_Butterworth::check_stability_iir(std::vector<std::vector<double> > coeff_filt)
     {
         bool stability_flag = true;
 
@@ -1787,5 +1787,4 @@ void IIR_Butterworth::zero_pole_gain(arma::cx_mat a_arma_f, int type_filt_f, int
         return stability_flag;
 
     }
-    
 
