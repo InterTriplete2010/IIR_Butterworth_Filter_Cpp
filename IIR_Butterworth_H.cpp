@@ -923,6 +923,30 @@ void IIR_Butterworth::zp2ss(int order_filt)
 std::vector<std::vector<double> > IIR_Butterworth::lp2bp(double W_f1, double W_f2, int order_filt)
 {
 
+    //Check that the low cut-off frequency is higher than the low cut-off frequency
+    if (W_f2 <= W_f1)
+    {
+
+        throw new std::exception("The low cut-off frequency needs to be higher than the low cut-off frequency");
+
+    }
+
+    //Check that the normalized frequencies are within the correct range of values
+    if ((W_f1 <= 0) | (W_f1 >= 1) | (W_f2 <= 0) | (W_f2 >= 1))
+    {
+
+        throw new std::exception("Cut-off frequencies must be in the (0,1) range");
+
+    }
+
+    //Check that the order of the filter is > 0
+    if (order_filt <= 0)
+    {
+
+        throw new std::exception("The order of the filter must be > 0");
+
+    }
+
     //Clean up the global variables for a new analysis
     if (save_filt_coeff.size() > 0)
     {
@@ -1063,6 +1087,30 @@ std::vector<std::vector<double> > IIR_Butterworth::lp2bp(double W_f1, double W_f
 //Extract the coefficients of the band stop filter
 std::vector<std::vector<double> > IIR_Butterworth::lp2bs(double W_f1, double W_f2, int order_filt)
 {
+
+    //Check that the low cut-off frequency is higher than the low cut-off frequency
+    if (W_f2 <= W_f1)
+    {
+
+        throw new std::exception("The low cut-off frequency needs to be higher than the low cut-off frequency");
+
+    }
+
+    //Check that the normalized frequencies are within the correct range of values
+    if ((W_f1 <= 0) | (W_f1 >= 1) | (W_f2 <= 0) | (W_f2 >= 1))
+    {
+
+        throw new std::exception("Cut-off frequencies must be in the (0,1) range");
+
+    }
+
+    //Check that the order of the filter is > 0
+    if (order_filt <= 0)
+    {
+
+        throw new std::exception("The order of the filter must be > 0");
+
+    }
 
     //Clean up the global variables for a new analysis
     if (save_filt_coeff.size() > 0)
@@ -1253,6 +1301,22 @@ std::vector<std::vector<double> > IIR_Butterworth::lp2bs(double W_f1, double W_f
 std::vector<std::vector<double> > IIR_Butterworth::lp2hp(double W_f2, int order_filt)
 {
 
+    //Check that the normalized frequencies are within the correct range of values
+    if ((W_f2 <= 0) | (W_f2 >= 1))
+    {
+
+        throw new std::exception("Cut-off frequencies must be in the (0,1) range");
+
+    }
+
+    //Check that the order of the filter is > 0
+    if (order_filt <= 0)
+    {
+
+        throw new std::exception("The order of the filter must be > 0");
+
+    }
+
     //Clean up the global variables for a new analysis
     if (save_filt_coeff.size() > 0)
     {
@@ -1380,6 +1444,21 @@ std::vector<std::vector<double> > IIR_Butterworth::lp2hp(double W_f2, int order_
 //Extract the coefficients of the low pass filter
 std::vector<std::vector<double> > IIR_Butterworth::lp2lp(double W_f1, int order_filt)
 {
+    //Check that the normalized frequencies are within the correct range of values
+    if ((W_f1 <= 0) | (W_f1 >= 1))
+    {
+
+        throw new std::exception("Cut-off frequencies must be in the (0,1) range");
+
+    }
+
+    //Check that the order of the filter is > 0
+    if (order_filt <= 0)
+    {
+
+        throw new std::exception("The order of the filter must be > 0");
+
+    }
 
     //Clean up the global variables for a new analysis
     if (save_filt_coeff.size() > 0)
@@ -1787,4 +1866,4 @@ void IIR_Butterworth::zero_pole_gain(arma::cx_mat a_arma_f, int type_filt_f, int
         return stability_flag;
 
     }
-
+    
