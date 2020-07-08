@@ -13,7 +13,7 @@
 #include <armadillo>
 
 
-#define PI 3.14159265359
+#define PI 3.141592653589793
 
 //Global variables
 double fs = 2;
