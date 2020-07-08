@@ -259,6 +259,14 @@ std::vector<std::complex<double>> IIR_Butterworth::poly(std::vector<std::complex
 
     }
 
+    //Make sure that only the real part is saved
+    for (int kk = 0; kk < coeff_pol_f.size(); kk++)
+    {
+
+        coeff_pol_f.at(kk) = real(coeff_pol_f.at(kk));
+
+    }
+    
     return coeff_pol_f;
 }
 
