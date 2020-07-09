@@ -236,7 +236,6 @@ void IIR_Butterworth::buttap(int order_filt)
 }
 
 
-
 //Step 4: Transform to state-space
 //Intermidiate step: calculate the coefficients of the polynomial (based on Matlab code)
 std::vector<std::complex<double>> IIR_Butterworth::poly(std::vector<std::complex<double>> temp_array_poly, int col_poly)
@@ -259,17 +258,9 @@ std::vector<std::complex<double>> IIR_Butterworth::poly(std::vector<std::complex
 
     }
 
-    //Make sure that only the real part is saved
-    for (int kk = 0; kk < coeff_pol_f.size(); kk++)
-    {
-
-        coeff_pol_f.at(kk) = real(coeff_pol_f.at(kk));
-
-    }
-    
     return coeff_pol_f;
-}
 
+}
 
 //Calculate the factorial of the given number
 int IIR_Butterworth::factorial(int i)
@@ -1808,12 +1799,14 @@ void IIR_Butterworth::zero_pole_gain(arma::cx_mat a_arma_f, int type_filt_f, int
 
     }
 
-    std::complex<double> temp_sum_I = 0.0;
-    std::complex<double> temp_sum_II = 0.0;
+    std::complex<double> temp_sum_I;
+    std::complex<double> temp_sum_II;
 
-    for (int kk = 0; kk < dim_array + 1; kk++)
+     for (int kk = 0; kk < dim_array + 1; kk++)
     {
 
+        temp_sum_I = 0.0;
+        temp_sum_II = 0.0;
 
         for (int hh = 0; hh < dim_array + 1; hh++)
         {
