@@ -20,4 +20,4 @@ The library Armadillo needs to be downloaded and installed ((http://arma.sourcef
 
 If you don't use C++/CLR template, you should be able to remove this line and based on my communication with the guys who created armadillo, the code should run faster. 
 
-If you have any question and/or want to report bugs, please e-mail me (Alex) at: pressalex@hotmail.com
+If you have any question and/or want to report bugs, please e-mail me (Ale) at: pressalex@hotmail.com
