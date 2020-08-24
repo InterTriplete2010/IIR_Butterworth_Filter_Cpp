@@ -19,3 +19,5 @@ Each filter function will return a 2 rows x N coefficients 2D vector, where Row 
 The library Armadillo needs to be downloaded and installed ((http://arma.sourceforge.net/download.html)) along with lapack and blas. I have uploaded the lapack and blas libraries that I have used. Please, note that with the older version of Armadillo, I had to use #define ARMA_DONT_USE_CXX11 to make armadillo library work with C++/CLR in visual studio 2019. If you use the latest version (armadillo-9.880.1), which I would recommend, because it is supposedly faster than the previous one, as the developers told me, you should replace #define ARMA_DONT_USE_CXX11 with #define ARMA_DONT_USE_CXX11_MUTEX. 
 
 If you don't use C++/CLR template, you should be able to remove this line and based on my communication with the guys who created armadillo, the code should run faster. 
+
+If you have any question and/or want to report bugs, please e-mail me (Alex) at: pressalex@hotmail.com
