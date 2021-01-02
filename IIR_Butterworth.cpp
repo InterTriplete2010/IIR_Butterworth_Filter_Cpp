@@ -100,7 +100,7 @@ int main()
             for (int ll = 0; ll < coeff_numb; ll++)
 
             {
-                std::cout << coeff_final[kk][ll] << std::ends;
+                std::cout << coeff_final[kk][ll] << "\t" << std::ends;
 
             }
 
@@ -163,7 +163,7 @@ int main()
 
             {
 
-                std::cout << coeff_final[kk][ll] << std::ends;
+                std::cout << coeff_final[kk][ll] << "\t" << std::ends;
 
             }
 
@@ -224,7 +224,7 @@ int main()
 
             {
 
-                std::cout << coeff_final[kk][ll] << std::ends;
+                std::cout << coeff_final[kk][ll] << "\t" << std::ends;
 
             }
 
@@ -283,7 +283,7 @@ int main()
 
             {
 
-                std::cout << coeff_final[kk][ll] << std::ends;
+                std::cout << coeff_final[kk][ll] << "\t" << std::ends;
 
             }
 
