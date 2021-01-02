@@ -20,6 +20,10 @@ The library Armadillo needs to be downloaded and installed ((http://arma.sourcef
 
 If you don't use C++/CLR template, you should be able to remove this line and based on my communication with the guys who created armadillo, the code should run faster. 
 
-Additinally, this code was only tested in Visual Studio, so if you are running it in an environment different from Windows (e.g. Linux), you might need to comment out a couple of libraries like #include <crtdbg.h> or lines of code like #pragma once. 
+If you are running the code in Linux, you need to make the following changes in IIR_Butterworth.cpp:
+1) Comment out #include <crtdbg.h>
+2) Cooment out  _CrtDumpMemoryLeaks() in lines 64, 125, 187 and 246.
+
+Compile the code in the following way: g++ -ggdb IIR_Butterworth.cpp IIR_Butterworth_H.o -larmadillo -o <Name_Exe_File>
 
 If you have any question and/or want to report bugs, please e-mail me (Ale) at: pressalex@hotmail.com
