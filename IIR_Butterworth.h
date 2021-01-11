@@ -71,6 +71,9 @@ extern "C" {  // only need to export C interface if
 
             //Check the stability of the filter. Returns "true" is the filter is stable, false if it is unstable 
             bool check_stability_iir(std::vector<std::vector<double> >);
+          
+            //Filter the data by using the Direct-Form II Transpose, as explained in the Matlab documentation
+            std::vector<double> Filter_Data(std::vector<std::vector<double> > coeff_filt, std::vector<double> pre_filt_signal);
 
         };
 
