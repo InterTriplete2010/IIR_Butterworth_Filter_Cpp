@@ -1868,3 +1868,72 @@ void IIR_Butterworth::zero_pole_gain(arma::cx_mat a_arma_f, int type_filt_f, int
 
     }
     
+//Filter the data by using the Direct-Form II Transpose, as explained in the Matlab documentation
+std::vector<double> IIR_Butterworth::Filter_Data(std::vector<std::vector<double> > coeff_filt, std::vector<double> pre_filt_signal)
+{
+
+        std::vector<double> filt_signal(pre_filt_signal.size(), 0.0);
+
+        std::vector<std::vector<double>> w_val;
+        std::vector<double> temp_v;
+
+        for (int ff = 0; ff < pre_filt_signal.size(); ff++)
+        {
+
+                temp_v.push_back(0);
+
+        }
+
+        for (int hh = 0; hh < coeff_filt[0].size(); hh++)
+        {
+
+                w_val.push_back(temp_v);
+
+        }
+
+
+        //Convolution product to filter the data
+        for (int kk = 0; kk < pre_filt_signal.size(); kk++)
+        {
+
+                if (kk == 0)
+                {
+
+                        filt_signal[kk] = pre_filt_signal[kk] * coeff_filt[0][0];
+
+                        for (int ww = 1; ww < coeff_filt[0].size(); ww++)
+                        {
+
+                                w_val[ww - 1][kk] = pre_filt_signal[kk] * coeff_filt[0][ww] - filt_signal[kk] * coeff_filt[1][ww];
+
+        }
+
+                }
+
+                else
+                {
+
+                        filt_signal[kk] = pre_filt_signal[kk] * coeff_filt[0][0] + w_val[0][kk - 1];
+
+                                for (int ww = 1; ww < coeff_filt[0].size(); ww++)
+                                {
+
+                                        w_val[ww - 1][kk] = pre_filt_signal[kk] * coeff_filt[0][ww] + w_val[ww][kk - 1] - filt_signal[kk] * coeff_filt[1][ww];
+
+                                        if (ww == coeff_filt[0].size() - 1)
+                                        {
+
+                                                 w_val[ww - 1][kk] = pre_filt_signal[kk] * coeff_filt[0][ww] - filt_signal[kk] * coeff_filt[1][ww];
+
+                                        }
+
+                                }
+
+                }
+
+        }
+
+
+        return filt_signal;
+
+}
