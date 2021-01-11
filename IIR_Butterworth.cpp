@@ -296,4 +296,17 @@ int main()
 
     }
     
+     //Create a complex sine wave
+    std::vector<double> test_sin(sf,0.0);
+    double sf_1 = 20;
+    double sf_2 = 60;
+    for (double kk = 0; kk < sf; kk++)
+    {
+
+            test_sin[kk] = sin(2*PI*kk*sf_1/sf) + sin(2*PI*kk*sf_2/sf);
+
+    }
+
+    std::vector<double> filt_sign = ir_b.Filter_Data(coeff_final,test_sin);
+    
 }
