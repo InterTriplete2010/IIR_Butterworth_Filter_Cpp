@@ -697,7 +697,7 @@ void IIR_Butterworth::zp2ss(int order_filt)
 
                         case 0:
 
-                            if ((remainder(kk + 1, 2) != 0) | (kk == 0))
+                            if ((remainder(kk + 1, 2) != 0) || (kk == 0))
                             {
 
                                 a[kk][gg] = temp_matrix_a[track_index_coeff][1];
@@ -715,7 +715,7 @@ void IIR_Butterworth::zp2ss(int order_filt)
 
                         case -1:
 
-                            if ((remainder(kk + 1, 2) != 0) | (kk == 0))
+                            if ((remainder(kk + 1, 2) != 0) || (kk == 0))
                             {
 
                                 a[kk][gg] = temp_matrix_a[track_index_coeff][2];
@@ -931,7 +931,7 @@ std::vector<std::vector<double> > IIR_Butterworth::lp2bp(double W_f1, double W_f
     }
 
     //Check that the normalized frequencies are within the correct range of values
-    if ((W_f1 <= 0) | (W_f1 >= 1) | (W_f2 <= 0) | (W_f2 >= 1))
+    if ((W_f1 <= 0) || (W_f1 >= 1) || (W_f2 <= 0) || (W_f2 >= 1))
     {
 
         throw new std::exception("Cut-off frequencies must be in the (0,1) range");
@@ -1096,7 +1096,7 @@ std::vector<std::vector<double> > IIR_Butterworth::lp2bs(double W_f1, double W_f
     }
 
     //Check that the normalized frequencies are within the correct range of values
-    if ((W_f1 <= 0) | (W_f1 >= 1) | (W_f2 <= 0) | (W_f2 >= 1))
+    if ((W_f1 <= 0) || (W_f1 >= 1) || (W_f2 <= 0) || (W_f2 >= 1))
     {
 
         throw new std::exception("Cut-off frequencies must be in the (0,1) range");
@@ -1301,7 +1301,7 @@ std::vector<std::vector<double> > IIR_Butterworth::lp2hp(double W_f2, int order_
 {
 
     //Check that the normalized frequencies are within the correct range of values
-    if ((W_f2 <= 0) | (W_f2 >= 1))
+    if ((W_f2 <= 0) || (W_f2 >= 1))
     {
 
         throw new std::exception("Cut-off frequencies must be in the (0,1) range");
@@ -1444,7 +1444,7 @@ std::vector<std::vector<double> > IIR_Butterworth::lp2hp(double W_f2, int order_
 std::vector<std::vector<double> > IIR_Butterworth::lp2lp(double W_f1, int order_filt)
 {
     //Check that the normalized frequencies are within the correct range of values
-    if ((W_f1 <= 0) | (W_f1 >= 1))
+    if ((W_f1 <= 0) || (W_f1 >= 1))
     {
 
         throw new std::exception("Cut-off frequencies must be in the (0,1) range");
