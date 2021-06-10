@@ -10,9 +10,9 @@ Each filter function will return a 2 rows x N coefficients 2D vector, where Row 
 
 2) Band-stop: the function is "std::vector<std::vector<double> > lp2bs(double, double, int)". The first two arguments are the two normalized cut-off frequencies (f1/NF, f2/NF), where NF is the Nyquist frequency. This means that the cutoff frequencies must be within the interval of (0,1). The last argument is the order;
 
-3) Low-pass: the function is "std::vector<std::vector<double> > lp2lp(double, int)". The first argument is the normalized two cut-off frequency (f/NF), where NF is the Nyquist frequency. This means that the cutoff frequency must be within the interval of (0,1). The last argument is the order;
+3) Low-pass: the function is "std::vector<std::vector<double> > lp2lp(double, int)". The first argument is the normalized cut-off frequency (f/NF), where NF is the Nyquist frequency. This means that the cutoff frequency must be within the interval of (0,1). The last argument is the order;
 
-4) High-pass: the function is "std::vector<std::vector<double> > lp2hp(double, int)". The first argument is the normalized two cut-off frequency (f/NF), where NF is the Nyquist frequency. This means that the cutoff frequency must be within the interval of (0,1). The last argument is the order;
+4) High-pass: the function is "std::vector<std::vector<double> > lp2hp(double, int)". The first argument is the normalized cut-off frequency (f/NF), where NF is the Nyquist frequency. This means that the cutoff frequency must be within the interval of (0,1). The last argument is the order;
 
 5) Check the stability of the filter: the method is "bool check_stability_iir(std::vector<std::vector<double> >)". The argument is the 2D array containing the filter coefficients. It returns "true" if the filter is stable, "false" if it is unstable. 
 
