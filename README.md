@@ -26,6 +26,9 @@ If you are running the code in Linux (Ubuntu 20.04), you need to make the follow
 
 You can also remove the line of code #define ARMA_DONT_USE_CXX11_MUTEX (or #define ARMA_DONT_USE_CXX11) and, based on my communication with the guys who created armadillo, the code should run faster. 
 
-Compile the code in the following way: g++ -ggdb IIR_Butterworth.cpp IIR_Butterworth_H.o -larmadillo -o <Name_Exe_File>
+Compile the code in the following way: 
+  
+  1) g++ -c IIR_Butterworth_H.cpp (to generate IIR_Butterworth_H.o)
+  2) g++ -ggdb IIR_Butterworth.cpp IIR_Butterworth_H.o -larmadillo -o <Name_Exe_File>
 
 If you have any question and/or want to report bugs, please e-mail me (Ale) at: pressalex@hotmail.com
