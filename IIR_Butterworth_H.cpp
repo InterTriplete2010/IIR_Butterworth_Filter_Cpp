@@ -237,7 +237,7 @@ void IIR_Butterworth::buttap(int order_filt)
 
 
 //Step 4: Transform to state-space
-//Intermidiate step: calculate the coefficients of the polynomial (based on Matlab code)
+//Intermediate step: calculate the coefficients of the polynomial (based on Matlab code)
 std::vector<std::complex<double>> IIR_Butterworth::poly(std::vector<std::complex<double>> temp_array_poly, int col_poly)
 {
     std::vector<std::complex<double>> coeff_pol_f(col_poly + 1);
@@ -337,7 +337,7 @@ std::vector<std::vector<int> > IIR_Butterworth::combination_method(int N, int K,
 
 
 
-//Intermidiate step: calculate the coefficients of the polynomial (Bernard Brooks' paper (2016))
+//Intermediate step: calculate the coefficients of the polynomial (Bernard Brooks' paper (2016))
 std::vector<std::complex<double>> IIR_Butterworth::char_poly(arma::cx_mat temp_matr_poly, int row_col)
 {
     
