@@ -119,14 +119,14 @@ void IIR_Butterworth::Wn_f1_Wn_f2(int type_filt, double u_f1, double u_f2)
 
         break;
 
-        //Low-pass
+        //High-pass
     case 2:
 
         Wn = u_f1;
 
         break;
 
-        //High-pass
+        //Low-pass
     case 3:
 
         Wn = u_f2;
