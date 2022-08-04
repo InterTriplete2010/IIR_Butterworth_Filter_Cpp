@@ -1173,7 +1173,7 @@ std::vector<std::vector<double> > IIR_Butterworth::lp2bs(double W_f1, double W_f
 
     }
 
-    //Copy the values of the matrix/arrays "arma" matrix/array in order to compute the pseudo-inverse of the matrix and other matrix operations
+    //Copy the values of the matrix/arrays into an "arma" matrix/array in order to compute the pseudo-inverse of the matrix and other matrix operations
     a_arma = arma::zeros <arma::cx_mat>(2 * temp_dim_arr_matr, 2 * temp_dim_arr_matr);
     arma::cx_mat a_arma_p_eye = arma::zeros <arma::cx_mat>(temp_dim_arr_matr, temp_dim_arr_matr);
     a_arma_p_eye = a_arma_p_eye.eye();
@@ -1377,7 +1377,7 @@ std::vector<std::vector<double> > IIR_Butterworth::lp2hp(double W_f2, int order_
 
     }
 
-    //Copy the values of the matrix/arrays "arma" matrix/array in order to compute the pseudo-inverse of the matrix and other matrix operations
+    //Copy the values of the matrix/arrays into an "arma" matrix/array in order to compute the pseudo-inverse of the matrix and other matrix operations
     a_arma = arma::zeros <arma::cx_mat>(temp_dim_arr_matr, temp_dim_arr_matr);
     b_arma = arma::zeros <arma::cx_mat>(temp_dim_arr_matr, 1);
     c_arma = arma::zeros <arma::cx_mat>(1, temp_dim_arr_matr);
@@ -1521,7 +1521,7 @@ std::vector<std::vector<double> > IIR_Butterworth::lp2lp(double W_f1, int order_
 
     }
 
-    //Copy the values of the matrix/arrays "arma" matrix/array in order to compute the pseudo-inverse of the matrix and other matrix operations
+    //Copy the values of the matrix/arrays into an "arma" matrix/array in order to compute the pseudo-inverse of the matrix and other matrix operations
     a_arma = arma::zeros <arma::cx_mat>(temp_dim_arr_matr, temp_dim_arr_matr);
     b_arma = arma::zeros <arma::cx_mat>(temp_dim_arr_matr, 1);
     c_arma = arma::zeros <arma::cx_mat>(1, temp_dim_arr_matr);
