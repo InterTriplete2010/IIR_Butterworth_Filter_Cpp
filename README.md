@@ -1,5 +1,5 @@
 # IIR_Butterworth_Filter_Cpp
-C++ code to calculate the coefficients of the Butterworth filter
+C++ code to calculate the coefficients of the Butterworth filter.
 
 
 This code calculates the coefficients of the Band-pass, Band-stop, Low-pass and High-pass Butterworth filters. The file IIR_Butterworth.cpp can be used to test the code. It also filters the data, but no zero-phase delay is applied. The name space is: IIR_B_F.
