@@ -1237,8 +1237,8 @@ std::vector<std::vector<double> > IIR_Butterworth::lp2bs(double W_f1, double W_f
     }
 
 
-    a_b_arma_temp = (Wn) * (a_arma_pinv * b_arma_temp) / q;
-    c_a_arma_temp = c_arma_temp * a_arma_pinv;
+   a_b_arma_temp = a_arma_pinv * b_arma_temp;
+    c_a_arma_temp = c_arma_temp * q * a_arma_pinv / Wn;
 
     for (int kk = 0; kk < 2 * temp_dim_arr_matr; kk++)
     {
@@ -1286,7 +1286,7 @@ std::vector<std::vector<double> > IIR_Butterworth::lp2bs(double W_f1, double W_f
 
     }
 
-    d_arma = d[0] + c_a_arma_temp * b_arma_temp;
+    d_arma = d[0] - c_a_arma_temp * b_arma_temp;
 
     //Step 5: Use Bilinear transformation to find discrete equivalent
     bilinear(a_arma, b_arma, c_arma, d_arma, fs, type_filt);
