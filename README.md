@@ -31,4 +31,4 @@ Compile the code in the following way:
   1) g++ -c IIR_Butterworth_H.cpp (to generate IIR_Butterworth_H.o)
   2) g++ -ggdb IIR_Butterworth.cpp IIR_Butterworth_H.o -larmadillo -o <Name_Exe_File>
 
-If you have any question and/or want to report bugs, please e-mail me (Ale) at: pressalex@hotmail.com
+If you have any questions and/or want to report bugs, please e-mail me (Ale) at: pressalex@hotmail.com
